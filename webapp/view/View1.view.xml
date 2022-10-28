@@ -1,0 +1,108 @@
+<mvc:View xmlns:layout="sap.ui.layout"
+    xmlns:f="sap.f" controllerName="com.smod.employeelistapp.controller.View1"
+    xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:card="sap.f.cards">
+    <Page id="page">
+        <customHeader>
+            <Toolbar>
+                <Title text="{i18n>title}" />
+                <ToolbarSpacer />
+                <SearchField placeholder="Type a name to search" value="{emplistModel>/searchQuery}" search=".onSearch" width="{= ${device>/system/phone} ? '10rem' : '25rem' }" />
+
+                <SegmentedButton selectedKey="{empListModel>/displayMode}">
+                    <items>
+                        <SegmentedButtonItem key="grid" icon="sap-icon://grid" press=".onShowAsGrid"/>
+                        <SegmentedButtonItem key="table" icon="sap-icon://list" press=".onShowAsTable"/>
+                    </items>
+                </SegmentedButton>
+            </Toolbar>
+        </customHeader>
+        <content>
+            <layout:Grid id="employeeGrid" defaultSpan="XL3 L4 M6 S12" content="{path:'/Employees',
+            sorter:{ path: 'EmployeeID', descending: true }}" class="sapUiSmallMarginTopBottom" visible="{= ${empListModel>/displayMode} === 'grid' }">
+
+                <layout:content>
+                    <f:Card headerPosition="Top" class="customEmployeeCard">
+                        <f:customData>
+                            <core:CustomData key="direct-reports-count" value="{path:'EmployeeID',formatter: '.getDirectReportsCount'}" writeToDom="{path:'EmployeeID',formatter: '.hasDirectReports'}" />
+                        </f:customData>
+                        <f:header>
+                            <card:Header title="{FirstName} {LastName} - {EmployeeID}" subtitle="{Title}" iconSrc="{path:'Photo', formatter: '.convertImagePath'}" />
+
+                        </f:header>
+                        <f:content>
+                            <VBox class="sapUiSmallMargin">
+                                <items>
+                                    <HBox alignItems="Center" alignContent="Center" justifyContent="SpaceBetween">
+                                        <Label text="Country" />
+                                        <Text text="{Country}" />
+                                    </HBox>
+                                    <HBox alignItems="Center" alignContent="Center" justifyContent="SpaceBetween">
+                                        <Label text="Reports to" />
+                                        <Text text="{path:'ReportsTo',formatter: '.getEmployeeById'}" />
+                                    </HBox>
+                                    <HBox alignItems="Center" alignContent="Center" justifyContent="SpaceBetween">
+                                        <Label text="Direct Reports" />
+                                        <Text text="{path:'EmployeeID',formatter: '.getDirectReportsCount'}" />
+                                    </HBox>
+                                    <HBox alignItems="Center" alignContent="Center" justifyContent="SpaceBetween">
+                                        <Label text="Age" />
+                                        <Text text="{path:'BirthDate',formatter: '.calculateAge'}" />
+                                    </HBox>
+                                    <HBox alignItems="Center" alignContent="Center" justifyContent="SpaceBetween">
+                                        <Label text="Hiredate" />
+                                        <Text text="{path:'HireDate', type: 'sap.ui.model.type.DateTime', 
+                                                formatOptions: { pattern: 'dd MMMM YYYY'}}" />
+                                    </HBox>
+                                </items>
+                            </VBox>
+
+
+
+                        </f:content>
+
+                    </f:Card>
+                </layout:content>
+            </layout:Grid>
+
+            <Table id="employeeTable" items="{path:'/Employees', parameters: {
+       expand: 'Employees1'
+    }}" visible="{= ${empListModel>/displayMode} === 'table' }">
+                <columns>
+                    <Column id="employeePhotoColumn" width="4rem">
+                        <Title text=""></Title>
+                    </Column>
+
+                    <Column id="employeeNameColumn">
+                        <Title text="Employee"></Title>
+                    </Column>
+
+                    <Column id="employeeCountryColumn">
+                        <Title text="Country"></Title>
+                    </Column>
+
+                    <Column id="employeeReportsColumn">
+                        <Title text="Reports To"></Title>
+                    </Column>
+                    <Column id="employeeDirectReportsColumn">
+                        <Title text="Direct Reports"></Title>
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem >
+                        <cells>
+                            <f:Avatar src="{path:'Photo', formatter: '.convertImagePath'}" displayShape="Circle" />
+                            <ObjectIdentifier title="{FirstName} {LastName} - {EmployeeID}" text="{Title}"/>
+                            <Title text="{Country}"/>
+                            <Title text="{path:'ReportsTo',formatter: '.getEmployeeById'}"/>
+                            <Title text="{path:'EmployeeID',formatter: '.getDirectReportsCount'}"/>
+
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </content>
+    </Page>
+</mvc:View>

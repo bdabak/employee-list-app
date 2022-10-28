@@ -1,0 +1,34 @@
+/* Enter your custom styles here */
+
+.customEmployeeCard {
+  position: relative;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.customEmployeeCard:hover {
+  box-shadow: 1px 1px 12px rgba(0, 0, 0, 0.4);
+}
+
+.customEmployeeCard * {
+  outline: unset !important;
+}
+
+.customEmployeeCard[data-direct-reports-count]::after {
+  content: attr(data-direct-reports-count);
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: rgb(54, 66, 103);
+  color: white;
+  font-size: 75%;
+  box-shadow: 1px 1px 3px rgb(0 0 0 / 50%);
+  z-index: 1;
+}
